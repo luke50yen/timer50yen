@@ -24,8 +24,6 @@ There is no reason to use this over any other timer/stopwatch application/packag
 Simply download the RPM file and run ``sudo dnf install path/to/your/timer50yen*.rpm``
 
 ### Ubuntu/Debian
-Ubuntu and Debian use .deb packages instead of RPM. You can install from source:
-
 ```bash
 # Install dependencies
 sudo apt update

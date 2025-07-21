@@ -8,13 +8,13 @@ SRC = timer.cpp
 all: $(TARGET)
 
 $(TARGET): $(SRC)
-    $(CXX) $(CXXFLAGS) -o $(TARGET) $(SRC)
+	$(CXX) $(CXXFLAGS) -o $(TARGET) $(SRC)
 
 install: $(TARGET)
-    install -m 755 $(TARGET) /usr/local/bin/$(TARGET)
+	install -m 755 $(TARGET) /usr/local/bin/$(TARGET)
 
 uninstall:
-    rm -f /usr/local/bin/$(TARGET)
+	rm -f /usr/local/bin/$(TARGET)
 
 clean:
-    rm -f $(TARGET)
+	rm -f $(TARGET)

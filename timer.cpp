@@ -56,10 +56,7 @@ void stopwatch(){
     }
 }
 
-int main(){
-    float current_time = 0;
-    bool iterating = true;
- 
+int main(){ 
     termios oldt = disable_terminal_buffering();
 
     // Request space to start the stopwatch

@@ -16,6 +16,17 @@ This project aims to create a **lightweight** timer that can run in the terminal
 
 There is no reason to use this over any other timer/stopwatch application/package, this project exists for the purpose of learning C++.
 
+### Planned additions
+- Stopwatch
+    - Lap timing
+    - Reset capability
+    - Difference in time between laps
+- Timer
+    - Progress bar along with seconds remaining
+    - Better time formatting (HH:MM:SS)
+- QoL
+    - --help argument
+
 ## Dependencies
 - Pulseaudio-utils
 

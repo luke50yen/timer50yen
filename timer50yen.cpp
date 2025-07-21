@@ -156,7 +156,7 @@ int main(int argc, char* argv[]){
 
         // Run the timer
         timer(seconds);
-        system("paplay ./alarm.mp3");
+        system("paplay /usr/share/timer50yen/alarm.mp3");
     } else {
         /// ERROR MODE
     }

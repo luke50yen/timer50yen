@@ -112,7 +112,7 @@ void timer(float current_time){
         last_time = now;
 
         // Display the current time
-        std::cout << "\r" << "Time (s): " << std::max(0.0f, std::round(current_time * 100) / 100) << std::flush;
+        std::cout << "\r" << "Time remaining (s): " << std::max(0.0f, std::round(current_time * 100) / 100) << std::flush;
 
         // Exit loop
         if (current_time <= 0){
@@ -121,8 +121,7 @@ void timer(float current_time){
 
         usleep(10000);
     }
-
-    std::cout << "\n" << "Timer complete";
+    std::cout << std::endl << "Timer complete" << std::flush;
 }
 
 int main(int argc, char* argv[]){ 
@@ -157,13 +156,14 @@ int main(int argc, char* argv[]){
 
         // Run the timer
         timer(seconds);
+        system("paplay ./alarm.mp3");
     } else {
         /// ERROR MODE
     }
     
 
     // Restore terminal to not have instant key detection 
-    //tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
 
     std::cout << std::endl;
 

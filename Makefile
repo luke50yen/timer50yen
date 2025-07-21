@@ -3,7 +3,7 @@
 CXX = g++
 CXXFLAGS = -O2 -Wall
 TARGET = timer50yen
-SRC = timer.cpp
+SRC = timer50yen.cpp
 
 all: $(TARGET)
 

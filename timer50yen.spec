@@ -8,7 +8,10 @@ URL:            https://github.com/luke50yen/timer50yen
 Source0:        %{name}-%{version}.tar.gz
 
 BuildRequires:  gcc
-Requires:       pulseaudio
+Requires:       pulseaudio-utils
+
+%global _debugsource_packages 0
+%global _debuginfo_packages 0
 
 %description
 A simple terminal stopwatch/timer with sound notification.
@@ -23,7 +26,8 @@ make
 make install DESTDIR=%{buildroot}
 
 %files
-/usr/local/bin/timer50yen
+/usr/bin/timer50yen
+/usr/share/timer50yen/alarm.mp3
 %doc README.md
 %license LICENSE
 

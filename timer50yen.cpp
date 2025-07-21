@@ -1,6 +1,8 @@
 #include <iostream>
 #include <chrono>
 #include <cmath>
+#include <string>
+
 #include <termios.h> // For instant key detection
 #include <unistd.h> // For instant key detection
 #include <fcntl.h> // For non-blocking input
@@ -56,20 +58,30 @@ void stopwatch(){
     }
 }
 
-int main(){ 
+int main(int argc, char* argv[]){ 
     termios oldt = disable_terminal_buffering();
 
-    // Request space to start the stopwatch
-    std::cout << "Press SPACE to start the timer...";
-    char ch;
-    do {
-        ch = wait_for_key(' ');
-    } while (ch != ' ');
+    if (argc == 1){
+        /// STOPWATCH MODE
+        // Request space to start the stopwatch
+         std::cout << "test";
+        std::cout << "Press SPACE to start the timer...";
+        char ch;
+        do {
+            ch = wait_for_key(' ');
+        } while (ch != ' ');
 
-    std::cout << "\r" << "Press SPACE to stop the timer..." << std::endl;
+        std::cout << "\r" << "Press SPACE to stop the timer..." << std::endl;
 
-    // Run the stopwatch
-    stopwatch();
+        // Run the stopwatch
+        stopwatch();
+    } else if (argc == 2){
+        /// TIMER MODE
+        std::cout << "hello";
+    } else {
+        /// ERROR MODE
+    }
+    
 
     // Restore terminal to not have instant key detection 
     tcsetattr(STDIN_FILENO, TCSANOW, &oldt);

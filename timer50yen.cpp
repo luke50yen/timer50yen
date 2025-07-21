@@ -6,6 +6,9 @@
 #include <termios.h> // For instant key detection
 #include <unistd.h> // For instant key detection
 #include <fcntl.h> // For non-blocking input
+#include <csignal> // For signal handling (early exit causing terminal settings to change)
+
+termios oldt; // Global variable to hold terminal settings
 
 termios disable_terminal_buffering(){
     // Disable terminal buffering and echo (for instant key detection)
@@ -15,6 +18,12 @@ termios disable_terminal_buffering(){
     newt.c_lflag &= ~(ICANON | ECHO);
     tcsetattr(STDIN_FILENO, TCSANOW, &newt);
     return oldt;
+}
+
+void restore_terminal(int signum) {
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    std::cout << std::endl << "Terminal restored (signal " << signum << "). Exiting." << std::endl;
+    exit(signum);
 }
 
 void set_nonblocking(bool enable) {
@@ -117,12 +126,14 @@ void timer(float current_time){
 }
 
 int main(int argc, char* argv[]){ 
-    termios oldt;
+
+    oldt = disable_terminal_buffering();
+    // Register signal handler
+    std::signal(SIGINT, restore_terminal);
+    std::signal(SIGTERM, restore_terminal);
 
     if (argc == 1){
         /// STOPWATCH MODE
-        oldt = disable_terminal_buffering();
-
         // Request space to start the stopwatch
         std::cout << "Press SPACE to start the timer...";
         char ch;
@@ -140,9 +151,9 @@ int main(int argc, char* argv[]){
 
         // Exit program if bad input
         if (seconds == -1 || seconds == 0){
+            restore_terminal(SIGTERM);
             return 1;
         }
-        oldt = disable_terminal_buffering();
 
         // Run the timer
         timer(seconds);
@@ -152,7 +163,7 @@ int main(int argc, char* argv[]){
     
 
     // Restore terminal to not have instant key detection 
-    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    //tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
 
     std::cout << std::endl;
 

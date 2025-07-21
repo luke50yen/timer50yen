@@ -38,7 +38,6 @@ void stopwatch(){
     float current_time = 0;
     bool iterating = true;
 
-    set_nonblocking(true);
     auto last_time = std::chrono::steady_clock::now();
     while(iterating){
         
@@ -58,13 +57,73 @@ void stopwatch(){
     }
 }
 
+int parse_time(const std::string input){
+    // If the input is correctly formatted, return the number of seconds 
+    // Otherwise, return an error
+
+    int hours = 0, minutes = 0, seconds = 0;
+    int num = 0; // Stored integer to apply character operation to
+
+    // Iterate through characters in the string
+    for (int i = 0; i < input.size(); i++){
+
+        if (isdigit(input[i])){
+            num = num * 10 + (input[i] - '0');
+        } else {
+            if (tolower(input[i]) == 'h') hours = num;
+            else if (tolower(input[i]) == 'm') minutes = num;
+            else if (tolower(input[i]) == 's') seconds = num;
+            else {
+                // Unrecognised value
+                std::cerr << "Error: Unrecognised value '" << input[i] << "' in provided timer argument.\n";
+                return -1;
+            }
+            // reset num
+            num = 0;
+        }
+    }
+
+    int result = 3600 * hours + 60 * minutes + seconds;
+    if (result == 0){
+        std::cerr << "Error: '" << input << "' argument results in a timer countdown starting from 0\n";
+    }
+    return result;
+}
+
+void timer(float current_time){
+    bool iterating = true;
+
+    auto last_time = std::chrono::steady_clock::now();
+
+    while(iterating){
+        // Calculate time elapsed
+        auto now = std::chrono::steady_clock::now();
+        std::chrono::duration<float> elapsed = now - last_time;
+        current_time -= elapsed.count();
+        last_time = now;
+
+        // Display the current time
+        std::cout << "\r" << "Time (s): " << std::max(0.0f, std::round(current_time * 100) / 100) << std::flush;
+
+        // Exit loop
+        if (current_time <= 0){
+            iterating = false;
+        }
+
+        usleep(10000);
+    }
+
+    std::cout << "\n" << "Timer complete";
+}
+
 int main(int argc, char* argv[]){ 
-    termios oldt = disable_terminal_buffering();
+    termios oldt;
 
     if (argc == 1){
         /// STOPWATCH MODE
+        oldt = disable_terminal_buffering();
+
         // Request space to start the stopwatch
-         std::cout << "test";
         std::cout << "Press SPACE to start the timer...";
         char ch;
         do {
@@ -77,7 +136,16 @@ int main(int argc, char* argv[]){
         stopwatch();
     } else if (argc == 2){
         /// TIMER MODE
-        std::cout << "hello";
+        int seconds = parse_time(argv[1]);
+
+        // Exit program if bad input
+        if (seconds == -1 || seconds == 0){
+            return 1;
+        }
+        oldt = disable_terminal_buffering();
+
+        // Run the timer
+        timer(seconds);
     } else {
         /// ERROR MODE
     }

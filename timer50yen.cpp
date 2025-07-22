@@ -101,8 +101,14 @@ int parse_time(const std::string input){
 
 void timer(float current_time){
     bool iterating = true;
+    const int progbar_width = 40;
+    float total_time = current_time;
 
     auto last_time = std::chrono::steady_clock::now();
+
+    // Print initial lines
+    std::cout << "Time remaining (s): " << current_time << std::endl;
+    //std::cout << "[" << std::string(progbar_width, ' ') << "] 0%" << std::endl;
 
     while(iterating){
         // Calculate time elapsed
@@ -111,8 +117,22 @@ void timer(float current_time){
         current_time -= elapsed.count();
         last_time = now;
 
-        // Display the current time
-        std::cout << "\r" << "Time remaining (s): " << std::max(0.0f, std::round(current_time * 100) / 100) << std::flush;
+        // Calculate progress
+        float progress = 1 - (current_time / total_time);
+        int pos = static_cast<int>(progbar_width * progress);
+
+        // Move cursor up 2 lines to update both lines
+        std::cout << "\033[A";
+
+        // Display the current time and progress bar
+        std::cout << "\r" << "Time remaining (s): " << std::max(0.0f, std::round(current_time * 100) / 100) << std::endl;
+        std::cout << " [";
+        for (int i=0; i<progbar_width; i++){
+            if (i < pos) std::cout << "=";
+            else if (i == pos) std::cout << ">";
+            else std::cout << " ";
+        }
+        std::cout << "] " << int(progress * 100) << "%" << std::flush;
 
         // Exit loop
         if (current_time <= 0){

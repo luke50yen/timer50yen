@@ -13,6 +13,9 @@ This project aims to create a **lightweight** timer that can run in the terminal
         - HhMmSs (e.g. 1h30m)
     - Alert when time has expired
         - Customisable sound
+    - Progress bar along with seconds remaining
+- QoL
+    - --help argument
 
 There is no reason to use this over any other timer/stopwatch application/package, this project exists for the purpose of learning C++.
 
@@ -22,11 +25,8 @@ There is no reason to use this over any other timer/stopwatch application/packag
     - Reset capability
     - Difference in time between laps
 - Timer
-    - Progress bar along with seconds remaining
     - Better time formatting (HH:MM:SS)
     - Option for timer to go off at a specified time
-- QoL
-    - --help argument
 
 ## Dependencies
 - Pulseaudio-utils
@@ -72,9 +72,9 @@ sudo make install
 
 ## How to use
 Running
-``  timer50yen  ``
+`` timer50yen `` OR `` t50 ``
 will prompt you to press SPACE to start the stopwatch, you can then press SPACE again to stop the stopwatch - terminating the program.
 
 Running
-``  timer50yen HhMmSs  `` E.g. ``  timer50yen 0h30m30s  ``
+`` timer50yen HhMmSs `` E.g. `` t50 0h30m30s ``
 will create a timer for the specified amount of time. After this time is up an alarm sound is played and the program is terminated.

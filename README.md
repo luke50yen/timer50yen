@@ -24,6 +24,7 @@ There is no reason to use this over any other timer/stopwatch application/packag
 - Timer
     - Progress bar along with seconds remaining
     - Better time formatting (HH:MM:SS)
+    - Option for timer to go off at a specified time
 - QoL
     - --help argument
 

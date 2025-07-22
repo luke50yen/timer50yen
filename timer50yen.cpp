@@ -101,8 +101,14 @@ int parse_time(const std::string input){
 
 void timer(float current_time){
     bool iterating = true;
+    const int progbar_width = 40;
+    float total_time = current_time;
 
     auto last_time = std::chrono::steady_clock::now();
+
+    // Print initial lines
+    std::cout << "Time remaining (s): " << current_time << std::endl;
+    //std::cout << "[" << std::string(progbar_width, ' ') << "] 0%" << std::endl;
 
     while(iterating){
         // Calculate time elapsed
@@ -111,8 +117,22 @@ void timer(float current_time){
         current_time -= elapsed.count();
         last_time = now;
 
-        // Display the current time
-        std::cout << "\r" << "Time remaining (s): " << std::max(0.0f, std::round(current_time * 100) / 100) << std::flush;
+        // Calculate progress
+        float progress = 1 - (current_time / total_time);
+        int pos = static_cast<int>(progbar_width * progress);
+
+        // Move cursor up 2 lines to update both lines
+        std::cout << "\033[A";
+
+        // Display the current time and progress bar
+        std::cout << "\r" << "Time remaining (s): " << std::max(0.0f, std::round(current_time * 100) / 100) << std::endl;
+        std::cout << " [";
+        for (int i=0; i<progbar_width; i++){
+            if (i < pos) std::cout << "=";
+            else if (i == pos) std::cout << ">";
+            else std::cout << " ";
+        }
+        std::cout << "] " << int(progress * 100) << "%" << std::flush;
 
         // Exit loop
         if (current_time <= 0){
@@ -124,7 +144,27 @@ void timer(float current_time){
     std::cout << std::endl << "Timer complete" << std::flush;
 }
 
+void display_help() {
+    std::cout << "Timer50yen - A lightweight terminal stopwatch and timer\n\n";
+    std::cout << "Usage:\n";
+    std::cout << "  timer50yen            Run in stopwatch mode (press SPACE to start/stop)\n";
+    std::cout << "  timer50yen TIME       Run a countdown timer for the specified time\n";
+    std::cout << "  timer50yen --help     Display this help message\n\n";
+    std::cout << "TIME format examples:\n";
+    std::cout << "  1h30m45s    1 hour, 30 minutes, 45 seconds\n";
+    std::cout << "  45m         45 minutes\n";
+    std::cout << "  90s         90 seconds\n";
+    std::cout << "  2h30s       2 hours, 30 seconds\n\n";
+    std::cout << "Note: You can combine or omit hours (h), minutes (m), and seconds (s) as needed.\n";
+}
+
 int main(int argc, char* argv[]){ 
+
+    // Check for help flag before any terminal modifications
+    if (argc == 2 && (std::string(argv[1]) == "--help" || std::string(argv[1]) == "-h")) {
+        display_help();
+        return 0;
+    }
 
     oldt = disable_terminal_buffering();
     // Register signal handler
@@ -159,6 +199,9 @@ int main(int argc, char* argv[]){
         system("paplay /usr/share/timer50yen/alarm.mp3");
     } else {
         /// ERROR MODE
+        std::cerr << "Error: Too many arguments\n";
+        restore_terminal(SIGTERM);
+        return 1;
     }
     
 

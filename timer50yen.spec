@@ -10,6 +10,8 @@ Source0:        %{name}-%{version}.tar.gz
 BuildRequires:  gcc
 Requires:       pulseaudio-utils
 
+%global debug_package %{nil}
+%global _enable_debug_package 0
 %global _debugsource_packages 0
 %global _debuginfo_packages 0
 
@@ -27,6 +29,7 @@ make install DESTDIR=%{buildroot}
 
 %files
 /usr/bin/timer50yen
+/usr/bin/t50
 /usr/share/timer50yen/alarm.mp3
 %doc README.md
 %license LICENSE

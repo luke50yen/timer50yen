@@ -1,2 +1,5 @@
 #compile binary
 timer50yen
+
+#RPM build
+build

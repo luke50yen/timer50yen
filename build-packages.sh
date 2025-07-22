@@ -17,8 +17,8 @@ echo "Building packages for ${PROJECT_NAME} v${VERSION}-${RELEASE}"
 # Clean previous builds
 echo "Cleaning previous builds..."
 rm -rf ${BUILD_DIR}
-rm -f ${PROJECT_NAME}-${VERSION}.tar.gz
-rm -f ${PROJECT_NAME}-${VERSION}-${RELEASE}.*.rpm
+rm -f *.tar.gz
+rm -f *.rpm
 make clean 2>/dev/null || true
 
 # Create build directory structure for RPM
@@ -46,12 +46,11 @@ cp ${SPEC_FILE} ${BUILD_DIR}/SPECS/
 # Build RPM
 echo "Building RPM package..."
 rpmbuild --define "_topdir $(pwd)/${BUILD_DIR}" \
-         -ba ${BUILD_DIR}/SPECS/${SPEC_FILE}
+         -bb ${BUILD_DIR}/SPECS/${SPEC_FILE}
 
-# Copy RPMs to current directory
+# Copy RPM to current directory
 echo "Copying RPM files..."
 find ${BUILD_DIR}/RPMS -name "*.rpm" -exec cp {} . \; 2>/dev/null || echo "No binary RPMs found"
-find ${BUILD_DIR}/SRPMS -name "*.rpm" -exec cp {} . \; 2>/dev/null || echo "No source RPMs found"
 
 # Display results
 echo ""
@@ -62,8 +61,9 @@ ls -la *.tar.gz *.rpm 2>/dev/null || echo "No packages found"
 echo ""
 echo "Files ready for upload:"
 echo "- Source: ${PROJECT_NAME}-${VERSION}.tar.gz"
-for rpm in *.rpm 2>/dev/null; do
+for rpm in *.rpm; do
     if [ -f "$rpm" ]; then
         echo "- RPM: $rpm"
     fi
-done
+done 2>/dev/null || true
+

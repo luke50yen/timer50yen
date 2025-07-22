@@ -27,6 +27,7 @@ There is no reason to use this over any other timer/stopwatch application/packag
 - Timer
     - Better time formatting (HH:MM:SS)
     - Option for timer to go off at a specified time
+    - Add a system notification (non-audiable) for when the timer has finished
 
 ## Dependencies
 - Pulseaudio-utils

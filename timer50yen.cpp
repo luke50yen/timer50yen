@@ -7,10 +7,11 @@
 #include <unistd.h> // For instant key detection
 #include <fcntl.h> // For non-blocking input
 #include <csignal> // For signal handling (early exit causing terminal settings to change)
+#include <libnotify/notify.h> // For pushing notifications to users system
 
-termios oldt; // Global variable to hold terminal settings
+struct termios oldt; // Global variable to hold terminal settings
 
-termios disable_terminal_buffering(){
+struct termios disable_terminal_buffering(){
     // Disable terminal buffering and echo (for instant key detection)
     termios oldt, newt;
     tcgetattr(STDIN_FILENO, &oldt);
@@ -32,6 +33,23 @@ void set_nonblocking(bool enable) {
         fcntl(STDIN_FILENO, F_SETFL, flags | O_NONBLOCK);
     else
         fcntl(STDIN_FILENO, F_SETFL, flags & ~O_NONBLOCK);
+}
+
+void send_notification(const std::string& title, const std::string& message){
+    if (notify_init("timer50yen")){
+        NotifyNotification *notification = notify_notification_new(
+            title.c_str(),
+            message.c_str(),
+            "clock"
+        );
+
+        notify_notification_set_urgency(notification, NOTIFY_URGENCY_NORMAL);
+        notify_notification_show(notification, NULL);
+        g_object_unref(G_OBJECT(notification));
+        notify_uninit();
+    } else {
+        std::cerr << "Error: Failure to initiate notification pusher\n"; 
+    }
 }
 
 char wait_for_key(char target, bool nonblocking = false) {
@@ -74,7 +92,7 @@ int parse_time(const std::string input){
     int num = 0; // Stored integer to apply character operation to
 
     // Iterate through characters in the string
-    for (int i = 0; i < input.size(); i++){
+    for (size_t i = 0; i < input.size(); i++){
 
         if (isdigit(input[i])){
             num = num * 10 + (input[i] - '0');
@@ -196,6 +214,7 @@ int main(int argc, char* argv[]){
 
         // Run the timer
         timer(seconds);
+        send_notification("Timer complete!", std::to_string(seconds) + " seconds have elapsed.");
         system("paplay /usr/share/timer50yen/alarm.mp3");
     } else {
         /// ERROR MODE

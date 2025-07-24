@@ -1,14 +1,15 @@
 # Makefile for timer50yen
 PREFIX ?= /usr
 CXX = g++
-CXXFLAGS = -O2 -Wall
+CXXFLAGS = -O2 -Wall `pkg-config --cflags libnotify`
+LDFLAGS = `pkg-config --libs libnotify`
 TARGET = timer50yen
 SRC = timer50yen.cpp
 
 all: $(TARGET)
 
 $(TARGET): $(SRC)
-	$(CXX) $(CXXFLAGS) -o $(TARGET) $(SRC)
+	$(CXX) $(CXXFLAGS) -o $(TARGET) $(SRC) $(LDFLAGS)
 
 install: $(TARGET)
 	install -d $(DESTDIR)$(PREFIX)/bin

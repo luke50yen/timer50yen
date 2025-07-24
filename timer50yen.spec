@@ -1,5 +1,5 @@
 Name:           timer50yen
-Version:        1.1
+Version:        1.2
 Release:        1%{?dist}
 Summary:        Terminal stopwatch/timer app
 
@@ -7,8 +7,8 @@ License:        MIT
 URL:            https://github.com/luke50yen/timer50yen
 Source0:        %{name}-%{version}.tar.gz
 
-BuildRequires:  gcc
-Requires:       pulseaudio-utils
+BuildRequires:  gcc, pkgconfig(libnotify), pkgconfig(glib-2.0)
+Requires:       pulseaudio-utils, libnotify
 
 %global debug_package %{nil}
 %global _enable_debug_package 0

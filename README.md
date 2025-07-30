@@ -14,6 +14,7 @@ This project aims to create a **lightweight** timer that can run in the terminal
     - Alert when time has expired
         - Customisable sound
     - Progress bar along with seconds remaining
+    - Non-audible system notification when timer has finished
 - QoL
     - --help argument
 
@@ -27,7 +28,6 @@ There is no reason to use this over any other timer/stopwatch application/packag
 - Timer
     - Better time formatting (HH:MM:SS)
     - Option for timer to go off at a specified time
-    - Add a system notification (non-audiable) for when the timer has finished
 
 ## Dependencies
 - Pulseaudio-utils
